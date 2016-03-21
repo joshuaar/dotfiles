@@ -1,38 +1,107 @@
+"------------------------------------------------------------------------------
+"Plugins
+"------------------------------------------------------------------------------
+filetype plugin indent on
+
+"------------------------------------------------------------------------------
+"Appearance
+"------------------------------------------------------------------------------
+syntax enable
+let base16colorspace=256
+
+set nowrap
+set title
+set visualbell
+set number
+set ruler
+set autoindent
+set nostartofline
+set expandtab
+set textwidth=0 wrapmargin=0
+set cmdheight=2
+set tabstop=2
+set shiftwidth=2
+set nocompatible
+set backspace=2
+let mapleader=","
+set timeout timeoutlen=1500
+set lazyredraw
+
+set title
+set titleold=""
+set titlestring=VIM:\ %F
+
+set colorcolumn=80
+highlight ColorColumn ctermbg=1
+
+"tab completion
+set wildmode=longest,list,full
+set wildmenu
+
+"change vim bracket highlighting color
+hi MatchParen cterm=bold ctermbg=none ctermfg=1
+
+
+"------------------------------------------------------------------------------
+"Behavior
+"------------------------------------------------------------------------------
+filetype plugin on
 set nocompatible
 
-"arrow remaps"
-"standard gaming arrows, gaming arrows using ijkl instead of wasd"
-nnoremap j h
-nnoremap k j  
-nnoremap i k
-nnoremap h i
+" Ctrl-j/k deletes blank line below/above, and Alt-j/k inserts.
+nnoremap <silent><C-j> m`:silent +g/\m^\s*$/d<CR>``:noh<CR>
+nnoremap <silent><C-k> m`:silent -g/\m^\s*$/d<CR>``:noh<CR>
+nnoremap <silent><A-j> :set paste<CR>m`o<Esc>``:set nopaste<CR>
+nnoremap <silent><A-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 
-"tab and indent settings"
-set tabstop=4	"Makes tabs 4 spaces"
-set autoindent	"makes next lines automatically indent"
+" Start NERDTree on vim startup & close the nerdtree if no more files are open
+"autocmd VimEnter * NERDTree
 
-"color scheme settings"
-set t_Co=256
-colorscheme molokai
+set mouse=a
 
-"UI settings"
-set cul                   " highlight current line
-set laststatus=2          " last window always has a statusline
-set nohlsearch            " Don't continue to highlight searched phrases.
-set incsearch             " But do highlight as you type your search.
-set ignorecase            " Make searches case-insensitive.
-set ruler                 " Always show info along bottom.
-set showmatch
-set statusline=%<%f\%h%m%r%=%-20.(line=%l\ \ col=%c%V\ \ totlin=%L%)\ \ \%h%m%r%=%-40(bytval=0x%B,%n%Y%)\%P
+" <Ctrl-l> redraws the screen and removes any search highlight
+nnoremap <silent> <C-l> :nohl<CR><C-l>
+
+" airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_enable_branch     = 1
+let g:airline_enable_syntastic  = 1
 
 
-"highlight lines longer than 80 chars"
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
+" plasticboy markdown & git-gutter
+let g:vim_markdown_math = 1
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_folding_disabled = 1
+"let g:gitgutter_highlight_lines = 1
 
-"syntax highlighting"
-syntax enable
-autocmd BufRead,BufNewFile *.py set filetype=py
-autocmd Syntax py sou ~/.vim/syntax/python.vim
+" syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
+" auto paste
+" https://coderwall.com/p/if9mda/automatically-set-paste-mode-in-vim-when-pasting-in-insert-mode
+let &t_SI .= "\<Esc>[?2004h"
+let &t_EI .= "\<Esc>[?2004l"
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
+function! XTermPasteBegin()
+    set pastetoggle=<Esc>[201~
+      set paste
+        return ""
+      endfunction]]
+"]"
+"]"
+
+"------------------------------------------------------------------------------
+"Search
+"------------------------------------------------------------------------------
+set infercase
+set nohlsearch
+set incsearch
